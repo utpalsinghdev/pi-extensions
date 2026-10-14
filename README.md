@@ -6,7 +6,7 @@ I'm making them open source so you can use them or adapt them to your own setup.
 
 ## Extensions
 
-- [pi-focus-mode](packages/pi-focus-mode/README.md) keeps prompts and assistant replies visible while hiding tool activity and optionally thinking. Not yet published to npm.
+- [pi-focus-mode](packages/pi-focus-mode/README.md) keeps prompts and assistant replies visible while hiding tool activity and optionally thinking. [View demo](packages/pi-focus-mode/README.md#demo). Not yet published to npm.
 
 Each extension under `packages/` has its own npm name and version and publishes independently. The workspace root is private and is never published.
 
@@ -44,6 +44,9 @@ pi-extensions/
 │   └── publishing.md
 ├── packages/
 │   └── pi-focus-mode/
+│       ├── assets/
+│       │   ├── pi-focus-mode-demo.gif
+│       │   └── pi-focus-mode-demo.mp4
 │       ├── extensions/index.ts
 │       ├── lib/render-adapter.ts
 │       ├── test/render-adapter.test.ts

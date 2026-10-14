@@ -6,6 +6,14 @@ Focus mode hides tool calls, tool results, inline tool images, and thinking. Pi'
 
 No companion extension or extra runtime software is required. Pi supplies the only runtime dependencies.
 
+## Demo
+
+![Focus mode demo](https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-focus-mode/assets/pi-focus-mode-demo.gif)
+
+[Watch the full-resolution video](https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-focus-mode/assets/pi-focus-mode-demo.mp4).
+
+The recording uses a customized Pi UI. Focus mode itself only hides tool activity and optional thinking.
+
 ## Try it locally
 
 From a clone's repository root, install development dependencies and start the local Pi:

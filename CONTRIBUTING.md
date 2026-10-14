@@ -44,6 +44,8 @@ For rendering changes, also check the interactive UI in fullscreen and regular m
 
 Create a separate directory under `packages/` with its own `package.json`, README, and entrypoint. Declare entrypoints under `pi.extensions` using paths relative to that package. Keep runtime helpers inside the package's `files` allowlist.
 
+Keep demo media under each extension's `assets/` directory, using names such as `pi-focus-mode-demo.gif` and `pi-focus-mode-demo.mp4`. Link the preview from that package's README and declare its public URLs in `pi.image` and `pi.video`. Keep demo assets out of the npm `files` allowlist unless the extension needs them at runtime.
+
 Declare imported host-provided Pi packages as peer dependencies, not runtime dependencies. Keep shared development tools at the workspace root. Existing workspace checks include TypeScript files under `packages/` and tests under each package's `test/` directory.
 
 Use repository-relative paths in scripts and examples. Do not depend on a contributor's home directory, personal Pi extensions, or local verification files. `.pi/` and credential files are ignored and are not contributor prerequisites.

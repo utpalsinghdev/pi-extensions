@@ -28,7 +28,9 @@
 	"pi": {
 		"extensions": [
 			"./extensions/index.ts"
-		]
+		],
+		"image": "https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-focus-mode/assets/pi-focus-mode-demo.gif",
+		"video": "https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-focus-mode/assets/pi-focus-mode-demo.mp4"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*",
