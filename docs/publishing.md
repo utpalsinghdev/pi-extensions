@@ -57,8 +57,6 @@ Declare third-party runtime imports in the package's `dependencies`. Keep shared
 
 Pi currently provides `@earendil-works/pi-ai`, `@earendil-works/pi-agent-core`, `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`, and `typebox`. Declare the ones the extension imports in `peerDependencies` with the `"*"` range. Do not put them in runtime `dependencies` or bundle them.
 
-These are the names in the current official documentation. Older examples use the `@mariozechner` scope, and some reference packages use narrower peer ranges. Follow the current Pi package documentation when creating the first package.
-
 ## Validate before publishing
 
 From the workspace root:
