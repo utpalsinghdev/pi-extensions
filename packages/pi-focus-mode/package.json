@@ -1,0 +1,43 @@
+{
+	"name": "@utpalsinghdev/pi-focus-mode",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Show prompts and assistant replies in Pi while hiding tool activity and optionally thinking.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/utpalsinghdev/pi-extensions.git",
+		"directory": "packages/pi-focus-mode"
+	},
+	"homepage": "https://github.com/utpalsinghdev/pi-extensions/tree/main/packages/pi-focus-mode#readme",
+	"bugs": {
+		"url": "https://github.com/utpalsinghdev/pi-extensions/issues"
+	},
+	"type": "module",
+	"license": "MIT",
+	"keywords": [
+		"pi-package",
+		"pi-extension",
+		"focus-mode"
+	],
+	"files": [
+		"extensions",
+		"lib",
+		"README.md",
+		"LICENSE"
+	],
+	"pi": {
+		"extensions": [
+			"./extensions/index.ts"
+		]
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

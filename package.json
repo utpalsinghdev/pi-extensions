@@ -1,0 +1,29 @@
+{
+	"name": "pi-extensions",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"description": "Workspace for independently published Pi Coding Agent extensions.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/utpalsinghdev/pi-extensions.git"
+	},
+	"type": "module",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"focus": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-focus-mode",
+		"check": "tsc --noEmit",
+		"test": "node --experimental-strip-types --test packages/*/test/*.test.ts"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"devDependencies": {
+		"@earendil-works/pi-coding-agent": "1.2.0",
+		"@earendil-works/pi-tui": "1.2.0",
+		"@types/node": "^22.20.5",
+		"typescript": "^7.0.2"
+	}
+}

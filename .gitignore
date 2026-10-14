@@ -1,0 +1,30 @@
+node_modules/
+dist/
+coverage/
+.vitest/
+*.tsbuildinfo
+*.tgz
+*.log
+.DS_Store
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+!.env.local.example
+.npmrc
+auth.json
+
+# Local editor and agent configuration
+.pi/
+.cursor/
+.claude/
+.github/copilot/
+.vscode/
+.agent/
+.agents/
+.codex/
+AGENTS.md
+CLAUDE.md
+agent.md
+agents.md
