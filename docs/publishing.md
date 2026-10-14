@@ -2,7 +2,7 @@
 
 ## Current state
 
-The workspace contains `packages/pi-focus-mode`, with npm name `@utpalsinghdev/pi-focus-mode`. Its implementation and checks are available locally. The package uses MIT and remains private until publication is approved. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
+The workspace contains `packages/pi-focus-mode`, with npm name `@utpalsinghdev/pi-focus-mode`. The package uses MIT and is configured for public npm publication. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
 
 The unscoped npm name `pi-focus-mode` belongs to another publisher. The extension's display name and directory remain pi-focus-mode; its npm name uses the approved account scope.
 
@@ -77,13 +77,13 @@ Pi loads the extension source directly, so no build is required. Also verify the
 Try the package locally without adding it to Pi's saved package settings:
 
 ```sh
-pi -e ./packages/pi-extension-name
+pi -e ./packages/pi-focus-mode
 ```
 
 Inspect the package contents before publishing:
 
 ```sh
-npm pack --workspace @your-scope/pi-extension-name --dry-run
+npm pack --workspace @utpalsinghdev/pi-focus-mode --dry-run
 ```
 
 Confirm that the tarball includes the declared entrypoints and their helpers, and excludes credentials, local configuration, and unnecessary files. Use an explicit `files` allowlist in each package. The root `.gitignore` is not a substitute for checking the tarball.
@@ -94,10 +94,10 @@ Authenticate with npm through its login flow. Public publishing requires the acc
 
 ```sh
 npm login
-npm publish --workspace @your-scope/pi-extension-name --access public
+npm publish --workspace @utpalsinghdev/pi-focus-mode --access public
 ```
 
-The root manifest has `private: true` deliberately. Publish the selected workspace only. Each package releases independently and needs a new version for every subsequent publication.
+The root manifest has `private: true` deliberately. Publish the selected workspace only. For a future extension, replace the workspace name with that package's npm name. Each package releases independently and needs a new version for every subsequent publication.
 
 Automatic publishing through GitHub Actions can be added later. It is not configured in the initial repository.
 
@@ -106,13 +106,13 @@ Automatic publishing through GitHub Actions can be added later. It is not config
 Read back the published npm metadata:
 
 ```sh
-npm view @your-scope/pi-extension-name version keywords pi --json
+npm view @utpalsinghdev/pi-focus-mode version keywords pi --json
 ```
 
 Test the published package in Pi:
 
 ```sh
-pi install npm:@your-scope/pi-extension-name
+pi install npm:@utpalsinghdev/pi-focus-mode
 ```
 
 Confirm that the intended extension loads and behaves correctly. Check [pi.dev/packages](https://pi.dev/packages) for catalog discovery after npm has indexed the package. Catalog eligibility does not guarantee immediate visibility.

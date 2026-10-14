@@ -1,7 +1,6 @@
 {
 	"name": "@utpalsinghdev/pi-focus-mode",
 	"version": "0.1.0",
-	"private": true,
 	"description": "Show prompts and assistant replies in Pi while hiding tool activity and optionally thinking.",
 	"repository": {
 		"type": "git",

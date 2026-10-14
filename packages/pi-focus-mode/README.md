@@ -14,7 +14,17 @@ No companion extension or extra runtime software is required. Pi supplies the on
 
 The recording uses a customized Pi UI. Focus mode itself only hides tool activity and optional thinking.
 
-## Try it locally
+## Install
+
+Install pi-focus-mode from npm:
+
+```sh
+pi install npm:@utpalsinghdev/pi-focus-mode
+```
+
+Focus mode starts enabled.
+
+## Try the source locally
 
 From a clone's repository root, install development dependencies and start the local Pi:
 
@@ -31,13 +41,11 @@ If Pi is already installed, you can load the source directly:
 pi --no-extensions --extension ./packages/pi-focus-mode
 ```
 
-Focus mode starts enabled. To keep a local installation:
+To install from the local checkout:
 
 ```sh
 pi install ./packages/pi-focus-mode
 ```
-
-The npm package name is `@utpalsinghdev/pi-focus-mode`. It has not been published yet.
 
 ## Controls
 
