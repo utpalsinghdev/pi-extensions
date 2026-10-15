@@ -1,0 +1,43 @@
+{
+	"name": "@utpalsinghdev/pi-prompt-stash",
+	"version": "0.1.0",
+	"description": "Stash half-written prompts while Pi works. Handle interruptions, then restore your draft.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/utpalsinghdev/pi-extensions.git",
+		"directory": "packages/pi-prompt-stash"
+	},
+	"homepage": "https://github.com/utpalsinghdev/pi-extensions/tree/main/packages/pi-prompt-stash#readme",
+	"bugs": {
+		"url": "https://github.com/utpalsinghdev/pi-extensions/issues"
+	},
+	"type": "module",
+	"license": "MIT",
+	"keywords": [
+		"pi-package",
+		"pi-extension",
+		"prompt-stash"
+	],
+	"files": [
+		"extensions",
+		"lib",
+		"README.md",
+		"LICENSE"
+	],
+	"pi": {
+		"extensions": [
+			"./extensions/index.ts"
+		],
+		"image": "https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-prompt-stash/assets/pi-prompt-stash-demo.gif"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

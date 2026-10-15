@@ -30,12 +30,21 @@ The focus-mode package contains:
 
 Keep execution and session history unchanged. Preserve the native working indicator, editor, approval dialogs, and errors.
 
+## Run prompt stash
+
+```sh
+PI_CODING_AGENT_DIR="$(mktemp -d)" npm run stash
+```
+
+This uses a temporary agent directory so testing cannot change personal saved prompts. Follow the [manual checklist](packages/pi-prompt-stash/README.md#verify), including shortcut changes, persistence, deletion, and narrow terminals.
+
 ## Verify your changes
 
 ```sh
 npm run check
 npm test
 npm pack --workspace @utpalsinghdev/pi-focus-mode --dry-run
+npm pack --workspace @utpalsinghdev/pi-prompt-stash --dry-run
 ```
 
 For rendering changes, also check the interactive UI in fullscreen and regular modes. Check focus toggling, thinking visibility, and reload. If you change the supported Pi range, verify those versions rather than widening the version guard alone.

@@ -7,6 +7,7 @@ I'm making them open source so you can use them or adapt them to your own setup.
 ## Extensions
 
 - [pi-focus-mode](packages/pi-focus-mode/README.md) keeps prompts and assistant replies visible while hiding tool activity and optionally thinking. [View demo](packages/pi-focus-mode/README.md#demo).
+- [pi-prompt-stash](packages/pi-prompt-stash/README.md) saves your half-written prompt when Pi goes off track or asks a question. Restore it when you're ready to continue. [View demo](packages/pi-prompt-stash/README.md#demo).
 
 Each extension under `packages/` has its own npm name and version and publishes independently. The workspace root is private and is never published.
 
@@ -16,6 +17,12 @@ Install pi-focus-mode from npm:
 
 ```sh
 pi install npm:@utpalsinghdev/pi-focus-mode
+```
+
+Install pi-prompt-stash:
+
+```sh
+pi install npm:@utpalsinghdev/pi-prompt-stash
 ```
 
 ## Run from a clone
@@ -37,7 +44,9 @@ If Pi is already installed, you can load the source directly without installing 
 pi --no-extensions --extension ./packages/pi-focus-mode
 ```
 
-Neither command adds the extension to your saved Pi package settings. Pi loads the TypeScript source directly; no build is required.
+To try prompt stash instead, run `npm run stash`. See its [README](packages/pi-prompt-stash/README.md#verify) for isolated manual testing without touching personal prompts.
+
+These commands do not add extensions to your saved Pi package settings. Pi loads the TypeScript source directly; no build is required.
 
 ## Contributing
 
@@ -51,6 +60,14 @@ pi-extensions/
 │   ├── designs/pi-focus-mode.md
 │   └── publishing.md
 ├── packages/
+│   ├── pi-prompt-stash/
+│   │   ├── assets/pi-prompt-stash-demo.gif
+│   │   ├── extensions/index.ts
+│   │   ├── lib/
+│   │   ├── test/
+│   │   ├── package.json
+│   │   ├── LICENSE
+│   │   └── README.md
 │   └── pi-focus-mode/
 │       ├── assets/
 │       │   ├── pi-focus-mode-demo.gif
