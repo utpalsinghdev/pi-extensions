@@ -46,6 +46,14 @@ PI_CODING_AGENT_DIR="$(mktemp -d)" npm run context-window
 
 This uses a temporary agent directory so testing cannot change your personal context threshold. Follow the [manual checklist](packages/pi-context-window/README.md#verify). The extension reports window size and a threshold you set. It does not read or change Pi compaction settings.
 
+## Run custom header
+
+```sh
+PI_CODING_AGENT_DIR="$(mktemp -d)" npm run custom-header
+```
+
+This loads the dot-art split header without personal extensions. Follow the [manual checklist](packages/pi-custom-header/README.md#verify) in regular and fullscreen modes. The package stays private and source-only. Do not publish it to npm.
+
 ## Verify your changes
 
 ```sh
@@ -56,7 +64,7 @@ npm pack --workspace @utpalsinghdev/pi-prompt-stash --dry-run
 npm pack --workspace @utpalsinghdev/pi-context-window --dry-run
 ```
 
-For rendering changes, also check the interactive UI in fullscreen and regular modes. Check focus toggling, thinking visibility, and reload. If you change the supported Pi range, verify those versions rather than widening the version guard alone.
+For rendering changes, also check the interactive UI in fullscreen and regular modes. For focus mode, check focus toggling, thinking visibility, and reload. For the custom header, check narrow resizing, blinking, `--header-static`, `/builtin-header`, and reload. If you change the supported Pi range, verify those versions rather than widening the version guard alone.
 
 ## Add an extension
 
