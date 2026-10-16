@@ -20,6 +20,16 @@ pi install npm:@utpalsinghdev/pi-context-window
 
 If you already have a personal context-window extension, disable that copy first. Both register the `context_window` tool.
 
+## Update and release notes
+
+See the [changelog](CHANGELOG.md) for release notes and usage examples.
+
+```sh
+pi update npm:@utpalsinghdev/pi-context-window
+```
+
+Run `/reload` or restart Pi after updating.
+
 ## Try from source
 
 From the repository root, use Node.js 22.19 or newer:

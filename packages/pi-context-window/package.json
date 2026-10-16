@@ -1,6 +1,6 @@
 {
 	"name": "@utpalsinghdev/pi-context-window",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "Show the agent the context window size, usage, and a planning threshold you set.",
 	"repository": {
 		"type": "git",
@@ -22,6 +22,7 @@
 		"extensions",
 		"lib",
 		"README.md",
+		"CHANGELOG.md",
 		"LICENSE"
 	],
 	"pi": {

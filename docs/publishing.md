@@ -2,7 +2,7 @@
 
 ## Current state
 
-The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, and `packages/pi-context-window`, with npm names `@utpalsinghdev/pi-focus-mode`, `@utpalsinghdev/pi-prompt-stash`, and `@utpalsinghdev/pi-context-window`. Each package releases independently. Release metadata for prompt stash is configured for version `0.1.0`. Context window is configured for version `0.2.0`.
+The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, and `packages/pi-context-window`, with npm names `@utpalsinghdev/pi-focus-mode`, `@utpalsinghdev/pi-prompt-stash`, and `@utpalsinghdev/pi-context-window`. Each package releases independently. Release metadata for prompt stash is configured for version `0.1.0`. Context window is configured for version `0.2.1`.
 
 The three packages use MIT and are configured for public npm publication. The workspace root stays private. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
 
