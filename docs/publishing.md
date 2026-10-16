@@ -2,7 +2,7 @@
 
 ## Current state
 
-The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, and `packages/pi-context-window`, with npm names `@utpalsinghdev/pi-focus-mode`, `@utpalsinghdev/pi-prompt-stash`, and `@utpalsinghdev/pi-context-window`. Each package releases independently. Release metadata for prompt stash and context window is configured for version `0.1.0`.
+The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, and `packages/pi-context-window`, with npm names `@utpalsinghdev/pi-focus-mode`, `@utpalsinghdev/pi-prompt-stash`, and `@utpalsinghdev/pi-context-window`. Each package releases independently. Release metadata for prompt stash is configured for version `0.1.0`. Context window is configured for version `0.2.0`.
 
 The three packages use MIT and are configured for public npm publication. The workspace root stays private. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
 
@@ -91,6 +91,8 @@ npm pack --workspace @utpalsinghdev/pi-focus-mode --dry-run
 Confirm that the tarball includes the declared entrypoints and their helpers, and excludes credentials, local configuration, and unnecessary files. Use an explicit `files` allowlist in each package. The root `.gitignore` is not a substitute for checking the tarball.
 
 ## Publish one package
+
+Merge the feature branch first, then publish from a clean `main` checkout. Re-run verification on `main` before publishing.
 
 Authenticate with npm through its login flow. Public publishing requires the account's supported authentication and two-factor verification. Do not commit tokens or an authenticated `.npmrc`.
 

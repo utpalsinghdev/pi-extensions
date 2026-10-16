@@ -8,7 +8,7 @@ I'm making them open source so you can use them or adapt them to your own setup.
 
 - [pi-focus-mode](packages/pi-focus-mode/README.md) keeps prompts and assistant replies visible while hiding tool activity and optionally thinking. [View demo](packages/pi-focus-mode/README.md#demo).
 - [pi-prompt-stash](packages/pi-prompt-stash/README.md) saves your half-written prompt when Pi goes off track or asks a question. Restore it when you're ready to continue. [View demo](packages/pi-prompt-stash/README.md#demo).
-- [pi-context-window](packages/pi-context-window/README.md) shows the agent the context window size, usage, and a planning threshold you set. It does not change auto-compaction. [View demo](packages/pi-context-window/README.md#demo).
+- [pi-context-window](packages/pi-context-window/README.md) shows the agent the context window size, usage, and a percentage or fixed-token planning threshold you set. It does not change auto-compaction. [View demo](packages/pi-context-window/README.md#demo).
 - [pi-custom-header](packages/pi-custom-header/README.md) adds a blinking dot-art portrait and split workspace header. Available from a clone only, not npm. [View preview](packages/pi-custom-header/README.md).
 
 Published extensions under `packages/` have separate npm names and versions. pi-custom-header stays private and source-only so you can customize its design for your own setup rather than use an npm release. The workspace root is private and is never published.
@@ -67,7 +67,7 @@ pi --no-extensions --extension ./packages/pi-focus-mode
 
 To try prompt stash instead, run `npm run stash`. See its [README](packages/pi-prompt-stash/README.md#verify) for isolated manual testing without touching personal prompts.
 
-To try the context window extension, run `npm run context-window`. Use a temporary agent directory if you do not want that run to change your saved threshold. See its [README](packages/pi-context-window/README.md#verify).
+To try the context window extension, run `npm run context-window`. Use `/context-threshold 70` for a percentage or `/context-threshold-static 200k` for a fixed 200,000-token limit. Setting either replaces the previous mode. Use a temporary agent directory if you do not want that run to change your saved threshold. See its [README](packages/pi-context-window/README.md#verify).
 
 To try the custom header, run `npm run custom-header`. See its [README](packages/pi-custom-header/README.md) for persistent local installation and disabling animation. It is not published to npm.
 

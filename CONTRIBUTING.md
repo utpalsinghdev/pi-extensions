@@ -44,7 +44,7 @@ This uses a temporary agent directory so testing cannot change personal saved pr
 PI_CODING_AGENT_DIR="$(mktemp -d)" npm run context-window
 ```
 
-This uses a temporary agent directory so testing cannot change your personal context threshold. Follow the [manual checklist](packages/pi-context-window/README.md#verify). The extension reports window size and a threshold you set. It does not read or change Pi compaction settings.
+This uses a temporary agent directory so testing cannot change your personal context threshold. Follow the [manual checklist](packages/pi-context-window/README.md#verify). The extension reports window size and a percentage or fixed-token threshold you set. Verify `/context-threshold 70`, `/context-threshold-static 200k`, raw token counts, mode switching, clear, and persistence. A static threshold must stay fixed across model-window changes. It does not read or change Pi compaction settings.
 
 ## Run custom header
 
