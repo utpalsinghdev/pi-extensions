@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { buildContextReport } from "../lib/report.ts";
+import { buildContextReport, structuredReport } from "../lib/report.ts";
 
 const windowTokens = 200_000;
 
@@ -121,6 +121,74 @@ test("an invalid threshold file hides the limit without dropping usage", () => {
 	assert.equal(report.details.thresholdPercent, null);
 	assert.equal(report.details.thresholdReached, null);
 	assert.match(report.details.thresholdError ?? "", /Invalid context threshold file/);
+});
+
+test("static threshold stays at 200k across model windows and uses exact token boundaries", () => {
+	for (const contextWindow of [100_000, 200_000, 500_000, 1_000_000]) {
+		for (const tokens of [199_999, 200_000, 200_001]) {
+			const report = buildContextReport({
+				usage: { tokens, contextWindow, percent: null },
+				modelContextWindow: contextWindow,
+				thresholdPercent: null,
+				thresholdTokens: 200_000,
+				thresholdError: null,
+			});
+			assert.equal(report.details.contextWindow, contextWindow);
+			assert.equal(report.details.usedPercent, tokens / contextWindow * 100);
+			assert.equal(report.details.remainingTokens, Math.max(0, contextWindow - tokens));
+			assert.equal(report.details.thresholdPercent, null);
+			assert.equal(report.details.thresholdTokens, 200_000);
+			assert.equal(report.details.thresholdReached, tokens >= 200_000);
+			assert.equal(report.details.tokensUntilThreshold, Math.max(0, 200_000 - tokens));
+			assert.equal(report.details.percentPointsUntilThreshold, null);
+			assert.match(report.text, /threshold 200000 tokens/);
+			assert.match(report.text, tokens < 200_000 ? /1 tokens until threshold$/ : /threshold reached$/);
+			assert.deepEqual(structuredReport(report.details), report.details);
+		}
+	}
+});
+
+test("static reports keep the limit when usage or window is unknown without inventing a gap", () => {
+	for (const modelContextWindow of [undefined, 500_000]) {
+		const report = buildContextReport({
+			usage: undefined,
+			modelContextWindow,
+			thresholdPercent: null,
+			thresholdTokens: 200_000,
+			thresholdError: null,
+		});
+		assert.match(report.text, /unknown used/);
+		assert.match(report.text, /threshold 200000 tokens$/);
+		assert.equal(report.details.thresholdTokens, 200_000);
+		assert.equal(report.details.thresholdReached, null);
+		assert.equal(report.details.tokensUntilThreshold, null);
+	}
+});
+
+test("a settings error hides a static threshold without dropping usage", () => {
+	const report = buildContextReport({
+		usage: { tokens: 84_000, contextWindow: 500_000, percent: null },
+		modelContextWindow: 500_000,
+		thresholdPercent: null,
+		thresholdTokens: 200_000,
+		thresholdError: "Invalid context threshold file",
+	});
+	assert.match(report.text, /84000\/500000 tokens/);
+	assert.match(report.text, /threshold unavailable$/);
+	assert.equal(report.details.thresholdTokens, null);
+	assert.equal(report.details.thresholdReached, null);
+	assert.equal(report.details.tokensUntilThreshold, null);
+});
+
+test("percentage reports leave static threshold unset in structured output", () => {
+	const report = buildContextReport({
+		usage: { tokens: 84_000, contextWindow: windowTokens, percent: null },
+		modelContextWindow: windowTokens,
+		thresholdPercent: 70,
+		thresholdError: null,
+	});
+	assert.equal(report.details.thresholdTokens, null);
+	assert.deepEqual(structuredReport(report.details), report.details);
 });
 
 test("the report does not include compaction settings", () => {

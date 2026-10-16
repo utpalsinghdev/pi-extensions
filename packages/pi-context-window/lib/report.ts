@@ -1,4 +1,4 @@
-import { readThreshold } from "./settings.ts";
+import { readThreshold, type ContextWindowSettings } from "./settings.ts";
 
 export interface ContextSnapshot {
 	tokens: number | null;
@@ -6,12 +6,11 @@ export interface ContextSnapshot {
 	percent: number | null;
 }
 
-export interface ContextReportInput {
+export type ContextReportInput = ContextWindowSettings & {
 	usage: ContextSnapshot | undefined;
 	modelContextWindow: number | undefined;
-	thresholdPercent: number | null;
 	thresholdError: string | null;
-}
+};
 
 export interface ContextReportDetails {
 	available: boolean;
@@ -22,6 +21,7 @@ export interface ContextReportDetails {
 	remainingTokens: number | null;
 	remainingPercent: number | null;
 	thresholdPercent: number | null;
+	thresholdTokens: number | null;
 	thresholdReached: boolean | null;
 	tokensUntilThreshold: number | null;
 	percentPointsUntilThreshold: number | null;
@@ -43,6 +43,7 @@ export function structuredReport(details: ContextReportDetails): Record<string, 
 		remainingTokens: details.remainingTokens,
 		remainingPercent: details.remainingPercent,
 		thresholdPercent: details.thresholdPercent,
+		thresholdTokens: details.thresholdTokens,
 		thresholdReached: details.thresholdReached,
 		tokensUntilThreshold: details.tokensUntilThreshold,
 		percentPointsUntilThreshold: details.percentPointsUntilThreshold,
@@ -58,7 +59,7 @@ export function loadReport(
 	return buildContextReport({
 		usage: input.usage,
 		modelContextWindow: input.modelContextWindow,
-		thresholdPercent: threshold.thresholdPercent,
+		...threshold,
 		thresholdError: threshold.error,
 	});
 }
@@ -66,12 +67,13 @@ export function loadReport(
 export function buildContextReport(input: ContextReportInput): ContextReport {
 	const windowTokens = positive(input.usage?.contextWindow) ?? positive(input.modelContextWindow);
 	const thresholdPercent = input.thresholdError ? null : input.thresholdPercent;
+	const thresholdTokens = input.thresholdError ? null : input.thresholdTokens ?? null;
+	const threshold = { thresholdPercent, thresholdTokens, thresholdError: input.thresholdError };
 	if (windowTokens === undefined) {
 		const details = detailsFrom({
 			available: false,
 			usageKnown: false,
-			thresholdPercent,
-			thresholdError: input.thresholdError,
+			...threshold,
 		});
 		return { text: line("unknown used", "unknown tokens remaining", details), details };
 	}
@@ -82,8 +84,7 @@ export function buildContextReport(input: ContextReportInput): ContextReport {
 			available: true,
 			usageKnown: false,
 			contextWindow: windowTokens,
-			thresholdPercent,
-			thresholdError: input.thresholdError,
+			...threshold,
 		});
 		return { text: line("unknown used", `${windowTokens} token window | unknown tokens remaining`, details), details };
 	}
@@ -91,12 +92,14 @@ export function buildContextReport(input: ContextReportInput): ContextReport {
 	const usedPercent = (usedTokens / windowTokens) * 100;
 	const remainingTokens = Math.max(0, windowTokens - usedTokens);
 	const remainingPercent = Math.max(0, 100 - usedPercent);
-	const thresholdReached = thresholdPercent === null ? null : usedTokens * 100 >= windowTokens * thresholdPercent;
-	const tokensUntilThreshold = thresholdPercent === null || thresholdReached === null
-		? null
-		: thresholdReached
-			? 0
-			: Math.ceil((windowTokens * thresholdPercent - usedTokens * 100) / 100);
+	const thresholdReached = thresholdTokens !== null
+		? usedTokens >= thresholdTokens
+		: thresholdPercent === null ? null : usedTokens * 100 >= windowTokens * thresholdPercent;
+	const tokensUntilThreshold = thresholdTokens !== null
+		? Math.max(0, thresholdTokens - usedTokens)
+		: thresholdPercent === null
+			? null
+			: Math.max(0, Math.ceil((windowTokens * thresholdPercent - usedTokens * 100) / 100));
 	const percentPointsUntilThreshold = thresholdPercent === null ? null : Math.max(0, thresholdPercent - usedPercent);
 	const details = detailsFrom({
 		available: true,
@@ -106,11 +109,10 @@ export function buildContextReport(input: ContextReportInput): ContextReport {
 		usedPercent,
 		remainingTokens,
 		remainingPercent,
-		thresholdPercent,
+		...threshold,
 		thresholdReached,
 		tokensUntilThreshold,
 		percentPointsUntilThreshold,
-		thresholdError: input.thresholdError,
 	});
 	const used = `${formatPercent(usedPercent)}% used | ${usedTokens}/${windowTokens} tokens`;
 	return { text: line(used, `${remainingTokens} remaining`, details), details };
@@ -132,6 +134,7 @@ function detailsFrom(
 		remainingTokens: partial.remainingTokens ?? null,
 		remainingPercent: partial.remainingPercent ?? null,
 		thresholdPercent: partial.thresholdPercent ?? null,
+		thresholdTokens: partial.thresholdTokens ?? null,
 		thresholdReached: partial.thresholdReached ?? null,
 		tokensUntilThreshold: partial.tokensUntilThreshold ?? null,
 		percentPointsUntilThreshold: partial.percentPointsUntilThreshold ?? null,
@@ -145,6 +148,13 @@ function line(used: string, remaining: string, details: ContextReportDetails): s
 
 function thresholdText(details: ContextReportDetails): string {
 	if (details.thresholdError) return "threshold unavailable";
+	if (details.thresholdTokens !== null) {
+		const label = `threshold ${details.thresholdTokens} tokens`;
+		if (details.thresholdReached === null) return label;
+		return details.thresholdReached
+			? `${label} | threshold reached`
+			: `${label} | ${details.tokensUntilThreshold} tokens until threshold`;
+	}
 	if (details.thresholdPercent === null) return "threshold not set";
 	if (details.thresholdReached === null) return `threshold ${details.thresholdPercent}%`;
 	if (details.thresholdReached) return `threshold ${details.thresholdPercent}% | threshold reached`;

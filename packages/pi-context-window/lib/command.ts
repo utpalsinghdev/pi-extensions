@@ -1,9 +1,12 @@
 import { loadReport, type ContextSnapshot } from "./report.ts";
-import { saveSettings } from "./settings.ts";
+import { isThresholdTokens, saveSettings } from "./settings.ts";
+
+export type ThresholdMode = "percent" | "static";
 
 export type ThresholdCommand =
 	| { kind: "show" }
 	| { kind: "set"; percent: number }
+	| { kind: "set-static"; tokens: number }
 	| { kind: "clear" }
 	| { kind: "invalid" };
 
@@ -13,12 +16,21 @@ export interface ThresholdCommandHost {
 	notify(message: string, type: "info" | "warning" | "error"): void;
 }
 
-const USAGE = "Usage: /context-threshold [percent|clear]. Percent must be an integer from 1 to 99.";
+const USAGE = {
+	percent: "Usage: /context-threshold [percent|clear]. Percent must be an integer from 1 to 99.",
+	static: "Usage: /context-threshold-static [tokens|clear]. Use a positive whole token count, such as 200000 or 200k.",
+};
 
-export function parseThresholdCommand(args: string): ThresholdCommand {
+export function parseThresholdCommand(args: string, mode: ThresholdMode = "percent"): ThresholdCommand {
 	const trimmed = args.trim().toLowerCase();
 	if (trimmed === "") return { kind: "show" };
 	if (trimmed === "clear" || trimmed === "off") return { kind: "clear" };
+	if (mode === "static") {
+		const match = /^(\d+)(k)?$/.exec(trimmed);
+		if (!match) return { kind: "invalid" };
+		const tokens = Number(match[1]) * (match[2] ? 1_000 : 1);
+		return isThresholdTokens(tokens) ? { kind: "set-static", tokens } : { kind: "invalid" };
+	}
 	const match = /^(\d{1,2})%?$/.exec(trimmed);
 	const digits = match?.[1];
 	if (!digits) return { kind: "invalid" };
@@ -27,15 +39,22 @@ export function parseThresholdCommand(args: string): ThresholdCommand {
 	return { kind: "set", percent };
 }
 
-export function handleThresholdCommand(args: string, host: ThresholdCommandHost, file: string): void {
-	const parsed = parseThresholdCommand(args);
+export function handleThresholdCommand(
+	args: string,
+	host: ThresholdCommandHost,
+	file: string,
+	mode: ThresholdMode = "percent",
+): void {
+	const parsed = parseThresholdCommand(args, mode);
 	if (parsed.kind === "invalid") {
-		host.notify(USAGE, "warning");
+		host.notify(USAGE[mode], "warning");
 		return;
 	}
-	if (parsed.kind === "set" || parsed.kind === "clear") {
+	if (parsed.kind !== "show") {
 		try {
-			saveSettings(file, { thresholdPercent: parsed.kind === "set" ? parsed.percent : null });
+			saveSettings(file, parsed.kind === "set-static"
+				? { thresholdPercent: null, thresholdTokens: parsed.tokens }
+				: { thresholdPercent: parsed.kind === "set" ? parsed.percent : null });
 		} catch {
 			host.notify("Could not save the context threshold. Nothing was changed.", "error");
 			return;
@@ -43,9 +62,10 @@ export function handleThresholdCommand(args: string, host: ThresholdCommandHost,
 	}
 
 	const report = loadReport(file, { usage: host.usage, modelContextWindow: host.modelContextWindow });
-	if (parsed.kind === "set") {
+	if (parsed.kind === "set" || parsed.kind === "set-static") {
+		const value = parsed.kind === "set" ? `${parsed.percent}%` : `${parsed.tokens} tokens`;
 		host.notify(
-			`Context threshold set to ${parsed.percent}%. ${report.text}`,
+			`Context threshold set to ${value}. ${report.text}`,
 			report.details.thresholdReached ? "warning" : "info",
 		);
 		return;
@@ -56,8 +76,10 @@ export function handleThresholdCommand(args: string, host: ThresholdCommandHost,
 	}
 	const label = report.details.thresholdError
 		? "Could not read the context threshold."
-		: report.details.thresholdPercent === null
-			? "Context threshold is not set."
-			: `Context threshold: ${report.details.thresholdPercent}%.`;
+		: report.details.thresholdTokens !== null
+			? `Context threshold: ${report.details.thresholdTokens} tokens.`
+			: report.details.thresholdPercent === null
+				? "Context threshold is not set."
+				: `Context threshold: ${report.details.thresholdPercent}%.`;
 	host.notify(`${label} ${report.text}`, report.details.thresholdError ? "error" : "info");
 }

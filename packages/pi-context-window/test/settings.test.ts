@@ -17,18 +17,31 @@ test("missing file is an unset threshold", (t) => {
 	assert.deepEqual(readThreshold(settingsPath(directory)), { thresholdPercent: null, error: null });
 });
 
-test("save and load round-trip an integer threshold and a cleared threshold", (t) => {
+test("save and load round-trip percent, static, and cleared thresholds", (t) => {
 	const { file } = fixture(t);
 	saveSettings(file, { thresholdPercent: 70 });
 	assert.deepEqual(loadSettings(file), { thresholdPercent: 70 });
 	if (process.platform !== "win32") assert.equal(statSync(file).mode & 0o777, 0o600);
+	saveSettings(file, { thresholdPercent: null, thresholdTokens: 200_000 });
+	assert.deepEqual(loadSettings(file), { thresholdPercent: null, thresholdTokens: 200_000 });
+	assert.deepEqual(readThreshold(file), { thresholdPercent: null, thresholdTokens: 200_000, error: null });
 	saveSettings(file, { thresholdPercent: null });
 	assert.deepEqual(loadSettings(file), { thresholdPercent: null });
 });
 
 test("invalid files are rejected and left unchanged", (t) => {
 	const { file } = fixture(t);
-	for (const content of ["{", "null", "{}", JSON.stringify({ thresholdPercent: 0 }), JSON.stringify({ thresholdPercent: 70.5 }), JSON.stringify({ thresholdPercent: 100 })]) {
+	const invalidSettings = [
+		{ thresholdPercent: 0 },
+		{ thresholdPercent: 70.5 },
+		{ thresholdPercent: 100 },
+		{ thresholdTokens: 200_000 },
+		{ thresholdPercent: 70, thresholdTokens: 200_000 },
+		...[null, 0, -1, 1.5, "200k", Number.MAX_SAFE_INTEGER + 1].map((thresholdTokens) => ({
+			thresholdPercent: null, thresholdTokens,
+		})),
+	];
+	for (const content of ["{", "null", "{}", ...invalidSettings.map((settings) => JSON.stringify(settings))]) {
 		writeFileSync(file, content);
 		assert.throws(() => loadSettings(file));
 		assert.equal(readFileSync(file, "utf-8"), content);

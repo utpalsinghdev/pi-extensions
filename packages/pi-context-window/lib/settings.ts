@@ -4,9 +4,9 @@ import { dirname, join } from "node:path";
 
 export const SETTINGS_FILE = "context-window.json";
 
-export interface ContextWindowSettings {
-	thresholdPercent: number | null;
-}
+export type ContextWindowSettings =
+	| { thresholdPercent: number | null; thresholdTokens?: never }
+	| { thresholdPercent: null; thresholdTokens: number };
 
 export function settingsPath(agentDir: string): string {
 	return join(agentDir, SETTINGS_FILE);
@@ -14,6 +14,10 @@ export function settingsPath(agentDir: string): string {
 
 export function isThresholdPercent(value: unknown): value is number {
 	return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 99;
+}
+
+export function isThresholdTokens(value: unknown): value is number {
+	return typeof value === "number" && Number.isSafeInteger(value) && value > 0;
 }
 
 export function loadSettings(file: string): ContextWindowSettings {
@@ -34,12 +38,14 @@ export function loadSettings(file: string): ContextWindowSettings {
 		throw invalidFile(file);
 	}
 	if (!isSettings(parsed)) throw invalidFile(file);
-	return { thresholdPercent: parsed.thresholdPercent };
+	return parsed.thresholdTokens === undefined
+		? { thresholdPercent: parsed.thresholdPercent }
+		: { thresholdPercent: null, thresholdTokens: parsed.thresholdTokens };
 }
 
-export function readThreshold(file: string): { thresholdPercent: number | null; error: string | null } {
+export function readThreshold(file: string): ContextWindowSettings & { error: string | null } {
 	try {
-		return { thresholdPercent: loadSettings(file).thresholdPercent, error: null };
+		return { ...loadSettings(file), error: null };
 	} catch (error) {
 		return {
 			thresholdPercent: null,
@@ -60,8 +66,11 @@ export function saveSettings(file: string, settings: ContextWindowSettings): voi
 }
 
 function isSettings(value: unknown): value is ContextWindowSettings {
-	return typeof value === "object" && value !== null && "thresholdPercent" in value
-		&& (value.thresholdPercent === null || isThresholdPercent(value.thresholdPercent));
+	if (typeof value !== "object" || value === null || !("thresholdPercent" in value)) return false;
+	if ("thresholdTokens" in value) {
+		return value.thresholdPercent === null && isThresholdTokens(value.thresholdTokens);
+	}
+	return value.thresholdPercent === null || isThresholdPercent(value.thresholdPercent);
 }
 
 function invalidFile(file: string): Error {
