@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"license": "MIT",
-	"description": "Workspace for independently published Pi Coding Agent extensions.",
+	"description": "Workspace for Pi Coding Agent extensions.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/utpalsinghdev/pi-extensions.git"
@@ -16,6 +16,7 @@
 		"focus": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-focus-mode",
 		"stash": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-prompt-stash",
 		"context-window": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-context-window",
+		"custom-header": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-custom-header",
 		"check": "tsc --noEmit",
 		"test": "node --experimental-strip-types --test packages/*/test/*.test.ts"
 	},

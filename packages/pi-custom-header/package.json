@@ -1,0 +1,26 @@
+{
+	"name": "@utpalsinghdev/pi-custom-header",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "A split startup header with a blinking dot-art portrait and workspace sessions.",
+	"license": "MIT",
+	"files": [
+		"extensions",
+		"lib",
+		"README.md",
+		"LICENSE"
+	],
+	"pi": {
+		"extensions": [
+			"./extensions/index.ts"
+		]
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	}
+}
