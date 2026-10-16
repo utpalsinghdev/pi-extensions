@@ -35,16 +35,17 @@ pi install npm:@utpalsinghdev/pi-context-window
 
 ### Get only custom header
 
-With Git and Pi installed, use sparse checkout to get the header without the other extensions:
+With Git and Pi installed, clone the header into your global extensions directory for automatic discovery:
 
 ```sh
-git clone --depth 1 --filter=blob:none --sparse https://github.com/utpalsinghdev/pi-extensions.git pi-custom-header
-cd pi-custom-header
-git sparse-checkout set packages/pi-custom-header
-pi install ./packages/pi-custom-header
+extensions_dir="${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/extensions"
+mkdir -p "$extensions_dir/.sources" &&
+git clone --depth 1 --filter=blob:none --sparse https://github.com/utpalsinghdev/pi-extensions.git "$extensions_dir/.sources/pi-custom-header" &&
+git -C "$extensions_dir/.sources/pi-custom-header" sparse-checkout set packages/pi-custom-header &&
+ln -s ".sources/pi-custom-header/packages/pi-custom-header" "$extensions_dir/pi-custom-header"
 ```
 
-Repository root files are included. No workspace dependency install or build is needed. Keep the clone at the same location, edit the source to suit your setup, and run `/reload` in Pi. See the [custom header README](packages/pi-custom-header/README.md#get-only-this-extension) for customization paths.
+Pi automatically loads `~/.pi/agent/extensions/pi-custom-header` on startup. Run `/reload` if Pi is already open. No `pi install`, settings edits, dependency install, or build is needed. The snippet respects `PI_CODING_AGENT_DIR` if set. Sparse checkout includes repository root files but no other extensions. See the [custom header README](packages/pi-custom-header/README.md#get-only-this-extension) for customization paths.
 
 ## Run from a clone
 

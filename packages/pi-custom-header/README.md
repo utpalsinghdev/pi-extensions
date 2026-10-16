@@ -13,15 +13,16 @@ This extension is shared as source rather than published to npm so you can custo
 With Git and Pi already installed:
 
 ```sh
-git clone --depth 1 --filter=blob:none --sparse https://github.com/utpalsinghdev/pi-extensions.git pi-custom-header
-cd pi-custom-header
-git sparse-checkout set packages/pi-custom-header
-pi install ./packages/pi-custom-header
+extensions_dir="${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/extensions"
+mkdir -p "$extensions_dir/.sources" &&
+git clone --depth 1 --filter=blob:none --sparse https://github.com/utpalsinghdev/pi-extensions.git "$extensions_dir/.sources/pi-custom-header" &&
+git -C "$extensions_dir/.sources/pi-custom-header" sparse-checkout set packages/pi-custom-header &&
+ln -s ".sources/pi-custom-header/packages/pi-custom-header" "$extensions_dir/pi-custom-header"
 ```
 
-Sparse checkout keeps this extension and the repository root files, without checking out the other extensions. No workspace dependency install or build is needed. Run `pi` to use the header, then `/reload` after editing its source. Keep the clone at the same location because the local installation loads files from it.
+The clone stays inside `~/.pi/agent/extensions/.sources/pi-custom-header`. The symlink exposes its package as `~/.pi/agent/extensions/pi-custom-header`, which Pi discovers automatically. No `pi install`, settings edits, dependency install, or build is needed. Start Pi normally, or run `/reload` if it is already open. The snippet respects `PI_CODING_AGENT_DIR` if set. Sparse checkout includes repository root files but no other extensions.
 
-To customize it, edit `lib/header-portrait.ts` for the dot art and blink frames, `lib/header-portrait-colors.ts` for colors, `lib/header.ts` for metadata and the split layout, or `lib/header-workspace.ts` for workspace details. These paths are inside `packages/pi-custom-header/`.
+To customize it, edit `lib/header-portrait.ts` for the dot art and blink frames, `lib/header-portrait-colors.ts` for colors, `lib/header.ts` for metadata and the split layout, or `lib/header-workspace.ts` for workspace details. These paths are available through `~/.pi/agent/extensions/pi-custom-header/` after the setup above. Run `/reload` after editing.
 
 ## Run from a full clone
 
