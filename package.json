@@ -15,6 +15,7 @@
 	"scripts": {
 		"focus": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-focus-mode",
 		"stash": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-prompt-stash",
+		"context-window": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-context-window",
 		"check": "tsc --noEmit",
 		"test": "node --experimental-strip-types --test packages/*/test/*.test.ts"
 	},

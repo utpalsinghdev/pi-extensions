@@ -8,6 +8,7 @@ I'm making them open source so you can use them or adapt them to your own setup.
 
 - [pi-focus-mode](packages/pi-focus-mode/README.md) keeps prompts and assistant replies visible while hiding tool activity and optionally thinking. [View demo](packages/pi-focus-mode/README.md#demo).
 - [pi-prompt-stash](packages/pi-prompt-stash/README.md) saves your half-written prompt when Pi goes off track or asks a question. Restore it when you're ready to continue. [View demo](packages/pi-prompt-stash/README.md#demo).
+- [pi-context-window](packages/pi-context-window/README.md) shows the agent the context window size, usage, and a planning threshold you set. It does not change auto-compaction. [View demo](packages/pi-context-window/README.md#demo).
 
 Each extension under `packages/` has its own npm name and version and publishes independently. The workspace root is private and is never published.
 
@@ -23,6 +24,12 @@ Install pi-prompt-stash:
 
 ```sh
 pi install npm:@utpalsinghdev/pi-prompt-stash
+```
+
+Install pi-context-window:
+
+```sh
+pi install npm:@utpalsinghdev/pi-context-window
 ```
 
 ## Run from a clone
@@ -46,6 +53,8 @@ pi --no-extensions --extension ./packages/pi-focus-mode
 
 To try prompt stash instead, run `npm run stash`. See its [README](packages/pi-prompt-stash/README.md#verify) for isolated manual testing without touching personal prompts.
 
+To try the context window extension, run `npm run context-window`. Use a temporary agent directory if you do not want that run to change your saved threshold. See its [README](packages/pi-context-window/README.md#verify).
+
 These commands do not add extensions to your saved Pi package settings. Pi loads the TypeScript source directly; no build is required.
 
 ## Contributing
@@ -60,6 +69,14 @@ pi-extensions/
 │   ├── designs/pi-focus-mode.md
 │   └── publishing.md
 ├── packages/
+│   ├── pi-context-window/
+│   │   ├── assets/pi-context-window-demo.gif
+│   │   ├── extensions/index.ts
+│   │   ├── lib/
+│   │   ├── test/
+│   │   ├── package.json
+│   │   ├── LICENSE
+│   │   └── README.md
 │   ├── pi-prompt-stash/
 │   │   ├── assets/pi-prompt-stash-demo.gif
 │   │   ├── extensions/index.ts

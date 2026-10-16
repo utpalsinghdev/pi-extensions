@@ -2,9 +2,9 @@
 
 ## Current state
 
-The workspace contains `packages/pi-focus-mode` and `packages/pi-prompt-stash`, with npm names `@utpalsinghdev/pi-focus-mode` and `@utpalsinghdev/pi-prompt-stash`. Each package releases independently. Release metadata for prompt stash is configured for version `0.1.0`.
+The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, and `packages/pi-context-window`, with npm names `@utpalsinghdev/pi-focus-mode`, `@utpalsinghdev/pi-prompt-stash`, and `@utpalsinghdev/pi-context-window`. Each package releases independently. Release metadata for prompt stash and context window is configured for version `0.1.0`.
 
-Both packages use MIT and are configured for public npm publication. The workspace root stays private. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
+The three packages use MIT and are configured for public npm publication. The workspace root stays private. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
 
 The unscoped npm name `pi-focus-mode` belongs to another publisher. The extension's display name and directory remain pi-focus-mode; its npm name uses the approved account scope.
 
@@ -99,7 +99,7 @@ npm login
 npm publish --workspace @utpalsinghdev/pi-focus-mode --access public
 ```
 
-The root manifest has `private: true` deliberately. Publish the selected workspace only. For prompt stash, use `--workspace @utpalsinghdev/pi-prompt-stash`. For a future extension, use that package's npm name. Each package releases independently and needs a new version for every subsequent publication.
+The root manifest has `private: true` deliberately. Publish the selected workspace only. For prompt stash, use `--workspace @utpalsinghdev/pi-prompt-stash`. For context window, use `--workspace @utpalsinghdev/pi-context-window`. For a future extension, use that package's npm name. Each package releases independently and needs a new version for every subsequent publication.
 
 Automatic publishing through GitHub Actions can be added later. It is not configured in the initial repository.
 

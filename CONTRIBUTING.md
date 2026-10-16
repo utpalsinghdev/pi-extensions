@@ -38,6 +38,14 @@ PI_CODING_AGENT_DIR="$(mktemp -d)" npm run stash
 
 This uses a temporary agent directory so testing cannot change personal saved prompts. Follow the [manual checklist](packages/pi-prompt-stash/README.md#verify), including shortcut changes, persistence, deletion, and narrow terminals.
 
+## Run context window
+
+```sh
+PI_CODING_AGENT_DIR="$(mktemp -d)" npm run context-window
+```
+
+This uses a temporary agent directory so testing cannot change your personal context threshold. Follow the [manual checklist](packages/pi-context-window/README.md#verify). The extension reports window size and a threshold you set. It does not read or change Pi compaction settings.
+
 ## Verify your changes
 
 ```sh
@@ -45,6 +53,7 @@ npm run check
 npm test
 npm pack --workspace @utpalsinghdev/pi-focus-mode --dry-run
 npm pack --workspace @utpalsinghdev/pi-prompt-stash --dry-run
+npm pack --workspace @utpalsinghdev/pi-context-window --dry-run
 ```
 
 For rendering changes, also check the interactive UI in fullscreen and regular modes. Check focus toggling, thinking visibility, and reload. If you change the supported Pi range, verify those versions rather than widening the version guard alone.
