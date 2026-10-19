@@ -1,6 +1,6 @@
 import type { KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import {
-	Input, matchesKey, stripTerminalSequences, truncateToWidth, visibleWidth, wrapTextWithAnsi,
+	Input, isKeyRelease, isKeyRepeat, matchesKey, stripTerminalSequences, truncateToWidth, visibleWidth, wrapTextWithAnsi,
 	type Component, type Focusable,
 } from "@earendil-works/pi-tui";
 import { searchProjects, type Project } from "./store.ts";
@@ -42,7 +42,8 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 	let entries = searchProjects(projects, input.getValue());
 	let index = 0;
 	let pageSize = 12;
-	let feedback: { color: "success" | "error"; text: string } | undefined;
+	let pendingRemoval: string | undefined;
+	let feedback: { color: "success" | "error" | "warning"; text: string } | undefined;
 
 	return {
 		get focused() { return input.focused; },
@@ -60,12 +61,12 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 				const selected = start + offset === index;
 				const current = project.path === options.currentPath;
 				const time = lastUsed(project.lastUsed);
-				const label = safeText(project.name) + (current ? " (current)" : "");
+				const label = safeText(project.name) + (current ? ` (${theme.fg("accent", theme.bold("current"))})` : "");
 				const title = truncateToWidth(`${selected ? "> " : "  "}${label}`, Math.max(1, inner - time.length - 2), "…");
 				const gap = " ".repeat(Math.max(1, inner - visibleWidth(title) - time.length));
 				const heading = title + gap + theme.fg("dim", time);
 				return [
-					selected || current ? theme.fg("accent", theme.bold(heading)) : theme.fg("text", heading),
+					selected ? theme.fg("accent", theme.bold(heading)) : theme.fg("text", heading),
 					theme.fg("muted", truncateToWidth(`  ${safeText(project.path)}`, inner, "…")),
 				];
 			});
@@ -87,6 +88,7 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 			].map((line) => theme.bg("userMessageBg", theme.fg("text", truncateToWidth(line, width, "", true))));
 		},
 		handleInput(data) {
+			if (isKeyRelease(data)) return;
 			if (keybindings.matches(data, "tui.select.cancel") || matchesKey(data, "ctrl+c")) return done(undefined);
 			if (keybindings.matches(data, "tui.select.confirm")) {
 				const selected = entries[index];
@@ -94,8 +96,16 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 				return;
 			}
 			if (matchesKey(data, "ctrl+d")) {
+				if (isKeyRepeat(data)) return;
 				const selected = entries[index];
 				if (!selected) return;
+				if (pendingRemoval !== selected.path) {
+					pendingRemoval = selected.path;
+					feedback = { color: "warning", text: "Press Ctrl+D again to remove from list." };
+					options.requestRender();
+					return;
+				}
+				pendingRemoval = undefined;
 				try {
 					options.onRemove(selected.path);
 				} catch {
@@ -109,6 +119,10 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 				feedback = { color: "success", text: "Removed from list. Folder unchanged." };
 				options.requestRender();
 				return;
+			}
+			if (pendingRemoval) {
+				pendingRemoval = undefined;
+				feedback = undefined;
 			}
 			if (keybindings.matches(data, "tui.select.up")) index = Math.max(0, index - 1);
 			else if (keybindings.matches(data, "tui.select.down")) index = Math.min(Math.max(0, entries.length - 1), index + 1);
