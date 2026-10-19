@@ -1,0 +1,32 @@
+{
+	"name": "@utpalsinghdev/pi-remote-workspace",
+	"version": "0.1.0",
+	"description": "Edit, test, and deploy on remote servers over SSH from your local Pi session. No remote Pi setup required.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/utpalsinghdev/pi-extensions.git",
+		"directory": "packages/pi-remote-workspace"
+	},
+	"homepage": "https://github.com/utpalsinghdev/pi-extensions/tree/main/packages/pi-remote-workspace#readme",
+	"bugs": {
+		"url": "https://github.com/utpalsinghdev/pi-extensions/issues"
+	},
+	"type": "module",
+	"license": "MIT",
+	"keywords": ["pi-package", "pi-extension", "ssh", "remote-workspace", "remote-development", "deployment"],
+	"files": ["extensions", "lib", "README.md", "LICENSE"],
+	"pi": {
+		"extensions": ["./extensions/index.ts"],
+		"image": "https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-remote-workspace/assets/pi-remote-workspace-demo.gif"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

@@ -54,6 +54,14 @@ PI_CODING_AGENT_DIR="$(mktemp -d)" npm run custom-header
 
 This loads the dot-art split header without personal extensions. Follow the [manual checklist](packages/pi-custom-header/README.md#verify) in regular and fullscreen modes. The package stays private and source-only. Do not publish it to npm.
 
+## Run remote workspace
+
+```sh
+npm run remote
+```
+
+Requires OpenSSH `ssh` on your PATH. Run `/remote` for private SSH login, then `/remote stop` to return local. See its [verification checklist](packages/pi-remote-workspace/README.md#verify) for authentication, remote tools, isolation, disconnects, and cleanup. Automated tests use generated credentials, never personal SSH settings or credentials.
+
 ## Verify your changes
 
 ```sh
@@ -62,9 +70,14 @@ npm test
 npm pack --workspace @utpalsinghdev/pi-focus-mode --dry-run
 npm pack --workspace @utpalsinghdev/pi-prompt-stash --dry-run
 npm pack --workspace @utpalsinghdev/pi-context-window --dry-run
+npm pack --workspace @utpalsinghdev/pi-remote-workspace --dry-run
 ```
 
 For rendering changes, also check the interactive UI in fullscreen and regular modes. For focus mode, check focus toggling, thinking visibility, and reload. For the custom header, check narrow resizing, blinking, `--header-static`, `/builtin-header`, and reload. If you change the supported Pi range, verify those versions rather than widening the version guard alone.
+
+## Keep infrastructure details private
+
+Do not commit real infrastructure IP addresses, hostnames, or credentials in code, documentation, examples, screenshots, or recordings. Use `XXX.XXX.XXX.XXX` for IP placeholders and `example.com` for example hostnames. Keep functional loopback addresses such as `127.0.0.1` in local tests.
 
 ## Add an extension
 

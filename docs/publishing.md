@@ -2,9 +2,11 @@
 
 ## Current state
 
-The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, and `packages/pi-context-window`, with npm names `@utpalsinghdev/pi-focus-mode`, `@utpalsinghdev/pi-prompt-stash`, and `@utpalsinghdev/pi-context-window`. Each package releases independently. Release metadata for prompt stash is configured for version `0.1.0`. Context window is configured for version `0.2.1`.
+The workspace contains `packages/pi-focus-mode`, `packages/pi-prompt-stash`, `packages/pi-context-window`, and `packages/pi-remote-workspace`, with corresponding npm names under `@utpalsinghdev`. Each package releases independently. Release metadata for prompt stash and remote workspace is configured for version `0.1.0`. Context window is configured for version `0.2.1`.
 
-The three packages use MIT and are configured for public npm publication. The workspace root stays private. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
+These four packages use MIT and are configured for public npm publication. `pi-custom-header` remains private and source-only. The workspace root stays private. The public source repository is [utpalsinghdev/pi-extensions](https://github.com/utpalsinghdev/pi-extensions). Release credentials stay outside the repository.
+
+Publish remote workspace separately with `npm publish --workspace @utpalsinghdev/pi-remote-workspace --access public`. Its demo GIF is hosted in the repository and excluded from the npm tarball.
 
 The unscoped npm name `pi-focus-mode` belongs to another publisher. The extension's display name and directory remain pi-focus-mode; its npm name uses the approved account scope.
 
