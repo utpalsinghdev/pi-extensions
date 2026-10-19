@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { type ExtensionAPI, type ExtensionContext, getAgentDir } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { createProjectPicker } from "../lib/picker.ts";
-import { projectSchema, readProjects, recordProject, searchProjects } from "../lib/store.ts";
+import { projectSchema, readProjects, recordProject, removeProject, searchProjects } from "../lib/store.ts";
 import { openProject } from "../lib/switch.ts";
 
 function errorMessage(error: unknown): string {
@@ -14,9 +14,9 @@ export default function projectManagerExtension(pi: ExtensionAPI): void {
 	let currentPath = "";
 	let writeErrorShown = false;
 
-	function record(ctx: ExtensionContext): void {
+	function record(ctx: ExtensionContext, options = { create: true }): void {
 		try {
-			currentPath = recordProject(directory, ctx.cwd).path;
+			currentPath = recordProject(directory, ctx.cwd, options).path;
 			writeErrorShown = false;
 		} catch (error) {
 			if (!writeErrorShown) ctx.ui.notify(`Could not record project: ${errorMessage(error)}`, "error");
@@ -25,10 +25,10 @@ export default function projectManagerExtension(pi: ExtensionAPI): void {
 	}
 
 	pi.on("session_start", (_event, ctx) => record(ctx));
-	pi.on("agent_end", (_event, ctx) => record(ctx));
+	pi.on("agent_end", (_event, ctx) => record(ctx, { create: false }));
 
 	pi.registerCommand("pm", {
-		description: "Search known projects and open a fresh session in the selected folder",
+		description: "Search known projects and open another folder in a fresh session",
 		handler: async (args, ctx) => {
 			if (ctx.mode !== "tui") {
 				ctx.ui.notify("/pm requires interactive mode. Use list_projects for agent lookup.", "error");
@@ -42,9 +42,13 @@ export default function projectManagerExtension(pi: ExtensionAPI): void {
 				const projects = readProjects(directory);
 				const path = await ctx.ui.custom<string | undefined>((tui, theme, keybindings, done) => createProjectPicker({
 					projects, currentPath, query: args, theme, keybindings, done,
-					getHeight: () => tui.terminal.rows - 2,
+					getHeight: () => tui.terminal.rows - 3,
 					requestRender: () => tui.requestRender(),
-				}), { overlay: true, overlayOptions: { width: 96, margin: 1 } });
+					onRemove: (path) => removeProject(directory, path),
+				}), {
+					overlay: true,
+					overlayOptions: { width: 120, anchor: "top-center", margin: { top: 2, right: 1, bottom: 1, left: 1 } },
+				});
 				if (path) await openProject(path, ctx);
 			} catch (error) {
 				ctx.ui.notify(`Project manager: ${errorMessage(error)}`, "error");

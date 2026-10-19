@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { basename, isAbsolute, join } from "node:path";
 import { Type, type Static } from "typebox";
 import { Value } from "typebox/value";
@@ -17,18 +17,25 @@ function filename(path: string): string {
 }
 
 /** One atomic file per canonical path avoids lost projects when several Pi processes write. */
-export function recordProject(directory: string, cwd: string): Project {
+export function recordProject(directory: string, cwd: string, options: { create?: boolean } = {}): Project {
 	const path = realpathSync(cwd);
-	mkdirSync(directory, { recursive: true, mode: 0o700 });
+	const file = join(directory, filename(path));
 	const record: ProjectRecord = { path, lastUsed: Date.now() };
+	if (options.create === false && !existsSync(file)) return { ...record, name: basename(path) || path };
+	mkdirSync(directory, { recursive: true, mode: 0o700 });
 	const temporary = join(directory, `.${randomUUID()}.tmp`);
 	try {
 		writeFileSync(temporary, JSON.stringify(record) + "\n", { encoding: "utf8", mode: 0o600, flag: "wx" });
-		renameSync(temporary, join(directory, filename(path)));
+		renameSync(temporary, file);
 	} finally {
 		rmSync(temporary, { force: true });
 	}
 	return { ...record, name: basename(path) || path };
+}
+
+/** Removes only the registry record, even if the project folder no longer exists. */
+export function removeProject(directory: string, path: string): void {
+	rmSync(join(directory, filename(path)), { force: true });
 }
 
 /** Reads only the registry, never project contents or Pi session history. */
