@@ -3,9 +3,10 @@ import { type ExtensionCommandContext, SessionManager } from "@earendil-works/pi
 
 /** Replace the entire Pi runtime so tools, instructions and resources use the target cwd. */
 export async function openProject(path: string, ctx: ExtensionCommandContext): Promise<void> {
+	const cwd = realpathSync(path);
+	if (cwd === realpathSync(ctx.cwd)) return;
 	if (!ctx.isIdle()) throw new Error("Wait for the current response to finish before switching projects.");
 	if (!ctx.sessionManager.getSessionFile()) throw new Error("/pm switching requires saved sessions. Restart Pi without --no-session.");
-	const cwd = realpathSync(path);
 	if (!statSync(cwd).isDirectory()) throw new Error(`Project is not a folder: ${cwd}`);
 	accessSync(cwd, constants.R_OK | constants.X_OK);
 
