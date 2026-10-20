@@ -11,8 +11,9 @@ I'm making them open source so you can use them or adapt them to your own setup.
 - [pi-context-window](packages/pi-context-window/README.md) shows the agent the context window size, usage, and a percentage or fixed-token planning threshold you set. It does not change auto-compaction. [View demo](packages/pi-context-window/README.md#demo).
 - [pi-custom-header](packages/pi-custom-header/README.md) adds a blinking dot-art portrait and split workspace header. Available from a clone only, not npm. [View preview](packages/pi-custom-header/README.md).
 - [pi-remote-workspace](packages/pi-remote-workspace/README.md) lets you edit, test, and deploy on remote servers over SSH from your local Pi session. No Pi setup on each server. [View demo](packages/pi-remote-workspace/README.md#demo).
+- [pi-project-manager](packages/pi-project-manager/README.md) remembers folders opened in Pi and shows paths, Git branches, and recent activity in a searchable `/pm` popup. The agent can look up known project paths. Private and source-only for now. [View demo](packages/pi-project-manager/README.md#demo).
 
-Published extensions under `packages/` have separate npm names and versions. pi-custom-header stays private and source-only so you can customize its design for your own setup rather than use an npm release. The workspace root is private and is never published.
+Published extensions under `packages/` have separate npm names and versions. pi-custom-header stays private and source-only so you can customize its design for your own setup rather than use an npm release. pi-project-manager is also private and available from this checkout. The workspace root is private and is never published.
 
 ## Install
 
@@ -81,6 +82,8 @@ To try the custom header, run `npm run custom-header`. See its [README](packages
 
 To try the remote workspace extension, run `npm run remote`, then `/remote`. Authenticate in the private popup; `/remote stop` returns to your local workspace. Requires OpenSSH. See its [README](packages/pi-remote-workspace/README.md) for permissions and privacy limits.
 
+To try the project manager, run `npm run pm`, then `/pm`. Selecting another folder starts a fresh session; selecting the current folder only closes the popup. Git branches appear beside folder paths. Press Ctrl+D twice to remove a list entry without deleting its folder. See its [README](packages/pi-project-manager/README.md) for automatic tracking across launches, branch loading, and the `list_projects` agent tool.
+
 These commands do not add extensions to your saved Pi package settings. Pi loads the TypeScript source directly; no build is required.
 
 ## Contributing
@@ -108,6 +111,13 @@ pi-extensions/
 │   │   ├── extensions/index.ts
 │   │   ├── lib/
 │   │   ├── test/
+│   │   ├── package.json
+│   │   ├── LICENSE
+│   │   └── README.md
+│   ├── pi-project-manager/
+│   │   ├── assets/pi-project-manager-demo.gif
+│   │   ├── extensions/index.ts
+│   │   ├── lib/
 │   │   ├── package.json
 │   │   ├── LICENSE
 │   │   └── README.md

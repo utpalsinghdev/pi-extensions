@@ -8,6 +8,8 @@ These four packages use MIT and are configured for public npm publication. `pi-c
 
 Publish remote workspace separately with `npm publish --workspace @utpalsinghdev/pi-remote-workspace --access public`. Its demo GIF is hosted in the repository and excluded from the npm tarball.
 
+`packages/pi-project-manager` is also included, with the npm name `@utpalsinghdev/pi-project-manager` and version `0.1.0`. It remains private pending first-release approval. Its README and `pi.image` use the repository-hosted demo GIF, which stays out of the npm tarball.
+
 The unscoped npm name `pi-focus-mode` belongs to another publisher. The extension's display name and directory remain pi-focus-mode; its npm name uses the approved account scope.
 
 ## How publication works

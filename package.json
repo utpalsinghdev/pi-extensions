@@ -18,6 +18,7 @@
 		"context-window": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-context-window",
 		"custom-header": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-custom-header",
 		"remote": "pi --tui-mode fullscreen --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-remote-workspace",
+		"pm": "pi --no-extensions --no-skills --no-prompt-templates --no-themes --no-context-files --extension ./packages/pi-project-manager",
 		"check": "tsc --noEmit",
 		"test": "node --experimental-strip-types --test packages/*/test/*.test.ts"
 	},
