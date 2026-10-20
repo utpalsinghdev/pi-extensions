@@ -62,6 +62,14 @@ npm run remote
 
 Requires OpenSSH `ssh` on your PATH. Run `/remote` for private SSH login, then `/remote stop` to return local. See its [verification checklist](packages/pi-remote-workspace/README.md#verify) for authentication, remote tools, isolation, disconnects, and cleanup. Automated tests use generated credentials, never personal SSH settings or credentials.
 
+## Run project manager
+
+```sh
+PI_CODING_AGENT_DIR="$(mktemp -d)" npm run pm
+```
+
+Run `/pm` to search recorded folders. Selecting another workspace starts a fresh session; selecting the current workspace only closes the picker. Reuse the temporary agent directory across launches to check persistence and deduplication. See its [verification checklist](packages/pi-project-manager/README.md#verify), including agent lookup, missing folders, and regular and fullscreen rendering.
+
 ## Verify your changes
 
 ```sh
@@ -71,6 +79,7 @@ npm pack --workspace @utpalsinghdev/pi-focus-mode --dry-run
 npm pack --workspace @utpalsinghdev/pi-prompt-stash --dry-run
 npm pack --workspace @utpalsinghdev/pi-context-window --dry-run
 npm pack --workspace @utpalsinghdev/pi-remote-workspace --dry-run
+npm pack --workspace @utpalsinghdev/pi-project-manager --dry-run
 ```
 
 For rendering changes, also check the interactive UI in fullscreen and regular modes. For focus mode, check focus toggling, thinking visibility, and reload. For the custom header, check narrow resizing, blinking, `--header-static`, `/builtin-header`, and reload. If you change the supported Pi range, verify those versions rather than widening the version guard alone.

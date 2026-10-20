@@ -8,12 +8,17 @@
 		"url": "git+https://github.com/utpalsinghdev/pi-extensions.git",
 		"directory": "packages/pi-project-manager"
 	},
+	"homepage": "https://github.com/utpalsinghdev/pi-extensions/tree/main/packages/pi-project-manager#readme",
+	"bugs": {
+		"url": "https://github.com/utpalsinghdev/pi-extensions/issues"
+	},
 	"type": "module",
 	"license": "MIT",
 	"keywords": ["pi-package", "pi-extension", "projects", "workspace"],
 	"files": ["extensions", "lib", "README.md", "LICENSE"],
 	"pi": {
-		"extensions": ["./extensions/index.ts"]
+		"extensions": ["./extensions/index.ts"],
+		"image": "https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-project-manager/assets/pi-project-manager-demo.gif"
 	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*",
