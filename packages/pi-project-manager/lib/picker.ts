@@ -1,9 +1,12 @@
 import type { KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import {
-	Input, isKeyRelease, isKeyRepeat, matchesKey, stripTerminalSequences, truncateToWidth, visibleWidth, wrapTextWithAnsi,
+	Input, isKeyRelease, isKeyRepeat, matchesKey, rgbColor, stripTerminalSequences, truncateToWidth, visibleWidth, wrapTextWithAnsi,
 	type Component, type Focusable,
 } from "@earendil-works/pi-tui";
+import { createBranchCache } from "./branches.ts";
 import { searchProjects, type Project } from "./store.ts";
+
+const BRANCH_COLOR = rgbColor(95, 215, 255);
 
 interface PickerOptions {
 	projects: Project[];
@@ -34,8 +37,9 @@ function lastUsed(timestamp: number): string {
 	return `${Math.floor(days / 365)}y ago`;
 }
 
-export function createProjectPicker(options: PickerOptions): Component & Focusable {
+export function createProjectPicker(options: PickerOptions): Component & Focusable & { dispose(): void } {
 	const { theme, keybindings, done } = options;
+	const branches = createBranchCache(options.requestRender);
 	const input = new Input({ prompt: "Search: ", placeholder: "name or path" });
 	input.handleInput(`\x1b[200~${safeText(options.query)}\x1b[201~`);
 	let projects = options.projects;
@@ -49,6 +53,7 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 		get focused() { return input.focused; },
 		set focused(value) { input.focused = value; },
 		invalidate() { input.invalidate(); },
+		dispose() { branches.dispose(); },
 		render(width) {
 			const inner = Math.max(1, width - 4);
 			const footer = [
@@ -57,17 +62,23 @@ export function createProjectPicker(options: PickerOptions): Component & Focusab
 			];
 			pageSize = Math.max(1, Math.min(12, Math.floor((options.getHeight() - 6 - footer.length) / 2)));
 			const start = Math.max(0, Math.min(index - Math.floor(pageSize / 2), entries.length - pageSize));
-			const body = entries.slice(start, start + pageSize).flatMap((project, offset) => {
+			const visible = entries.slice(start, start + pageSize);
+			branches.setVisible(visible.map((project) => project.path));
+			const body = visible.flatMap((project, offset) => {
 				const selected = start + offset === index;
 				const current = project.path === options.currentPath;
 				const time = lastUsed(project.lastUsed);
+				const branch = branches.get(project.path);
 				const label = safeText(project.name) + (current ? ` (${theme.fg("accent", theme.bold("current"))})` : "");
+				const branchLabel = branch
+					? theme.style(truncateToWidth(`   ${safeText(branch)}`, Math.floor(inner / 2), "…"), { fg: BRANCH_COLOR }) : "";
+				const pathLabel = truncateToWidth(`  ${safeText(project.path)}`, Math.max(1, inner - visibleWidth(branchLabel)), "…");
 				const title = truncateToWidth(`${selected ? "> " : "  "}${label}`, Math.max(1, inner - time.length - 2), "…");
 				const gap = " ".repeat(Math.max(1, inner - visibleWidth(title) - time.length));
 				const heading = title + gap + theme.fg("dim", time);
 				return [
 					selected ? theme.fg("accent", theme.bold(heading)) : theme.fg("text", heading),
-					theme.fg("muted", truncateToWidth(`  ${safeText(project.path)}`, inner, "…")),
+					theme.fg("muted", pathLabel) + branchLabel,
 				];
 			});
 			const position = entries.length ? `${index + 1}/${entries.length}` : "0/0";
