@@ -10,6 +10,7 @@ import {
 	CURSOR_MARKER, KeybindingsManager, setKeybindings, stripTerminalSequences,
 	TUI_KEYBINDINGS, visibleWidth,
 } from "@earendil-works/pi-tui";
+import { piKit } from "../lib/pi-kit.ts";
 import { createStashPicker } from "../lib/picker.ts";
 import { createShortcutDialog } from "../lib/shortcut-dialog.ts";
 import type { StashEntry } from "../lib/store.ts";
@@ -40,7 +41,7 @@ const stashes: StashEntry[] = [
 
 test("picker shows split preview on wide terminals and stacked preview on narrow terminals", () => {
 	const picker = createStashPicker({
-		stashes, theme, getHeight: () => 30, requestRender() {}, onDelete: () => true, done() {},
+		stashes, kit: piKit, theme, getHeight: () => 30, requestRender() {}, onDelete: () => true, done() {},
 	});
 	const wide = text(picker.render(100));
 	assert.ok(wide.includes("│"));
@@ -62,7 +63,7 @@ test("picker fits resize, Unicode, many entries and long previews into the avail
 		stashes: Array.from({ length: 40 }, (_, index) => ({
 			id: index + 1, text: `Prompt ${index + 1}\n${"中文 🙂 ".repeat(100)}`, timestamp: index,
 		})),
-		theme, getHeight: () => height, requestRender() {}, onDelete: () => true, done() {},
+		kit: piKit, theme, getHeight: () => height, requestRender() {}, onDelete: () => true, done() {},
 	});
 	for (height of [12, 18, 38]) {
 		for (const width of [20, 32, 70, 72, 100]) {
@@ -80,7 +81,7 @@ test("picker preview strips terminal commands without modifying the stored promp
 	const original = "Safe title\n\x1b]52;c;clipboard\x07\x1b[31mRed text\x1b[0m\n\tIndented";
 	const entry = { id: 1, text: original, timestamp: 0 };
 	const picker = createStashPicker({
-		stashes: [entry], theme, getHeight: () => 30, requestRender() {}, onDelete: () => true, done() {},
+		stashes: [entry], kit: piKit, theme, getHeight: () => 30, requestRender() {}, onDelete: () => true, done() {},
 	});
 	const output = picker.render(100).join("\n");
 	assert.ok(!output.includes("clipboard"));
@@ -94,7 +95,7 @@ test("picker keeps failed deletions selected, then deletes and loads the correct
 	let selected: number | undefined;
 	const deleted: number[] = [];
 	const picker = createStashPicker({
-		stashes, theme, getHeight: () => 30, requestRender() {},
+		stashes, kit: piKit, theme, getHeight: () => 30, requestRender() {},
 		onDelete(id) { if (allowDelete) deleted.push(id); return allowDelete; },
 		done(id) { selected = id; },
 	});

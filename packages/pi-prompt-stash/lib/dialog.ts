@@ -1,7 +1,8 @@
 import type { Theme } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import type { TextKit } from "./text-kit.ts";
 
 interface DialogOptions {
+	kit: TextKit;
 	theme: Theme;
 	width: number;
 	title: string;
@@ -11,7 +12,8 @@ interface DialogOptions {
 }
 
 // Shared native-style frame. Padding also keeps underlying transcript text out of the overlay.
-export function renderDialog({ theme, width, title, position, body, footer }: DialogOptions): string[] {
+export function renderDialog({ kit, theme, width, title, position, body, footer }: DialogOptions): string[] {
+	const { truncateToWidth, visibleWidth } = kit;
 	const contentWidth = Math.max(1, width - 4);
 	const labelWidth = position ? Math.max(1, contentWidth - visibleWidth(position) - 1) : contentWidth;
 	const label = truncateToWidth(title, labelWidth, "…");

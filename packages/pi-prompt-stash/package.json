@@ -30,6 +30,11 @@
 		],
 		"image": "https://raw.githubusercontent.com/utpalsinghdev/pi-extensions/main/packages/pi-prompt-stash/assets/pi-prompt-stash-demo.gif"
 	},
+	"omp": {
+		"extensions": [
+			"./extensions/omp.ts"
+		]
+	},
 	"peerDependencies": {
 		"@earendil-works/pi-coding-agent": "*",
 		"@earendil-works/pi-tui": "*"
