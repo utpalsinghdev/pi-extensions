@@ -1,7 +1,9 @@
-import type { KeybindingsManager } from "@earendil-works/pi-coding-agent";
-import type { KeyId } from "@earendil-works/pi-tui";
+import type { ExtensionAPI, KeybindingsManager } from "@earendil-works/pi-coding-agent";
 
-export const DEFAULT_STASH_SHORTCUT: KeyId = "ctrl+shift+s";
+// Same key-id syntax on Pi and omp; taken from the API so no TUI package is imported.
+export type ShortcutId = Parameters<ExtensionAPI["registerShortcut"]>[0];
+
+export const DEFAULT_STASH_SHORTCUT: ShortcutId = "ctrl+shift+s";
 
 const MODIFIERS = ["ctrl", "alt", "shift", "super"];
 const SPECIAL_KEYS = new Set([
@@ -48,7 +50,7 @@ const GLOBAL_APP_ACTIONS = new Set([
 	"tui.select.cancel",
 ]);
 
-export function normalizeStashShortcut(value: unknown): KeyId | undefined {
+export function normalizeStashShortcut(value: unknown): ShortcutId | undefined {
 	if (typeof value !== "string") return undefined;
 	const parts = value.toLowerCase().replace(/\s+/g, "").split("+");
 	let key = parts.pop();
@@ -69,10 +71,10 @@ export function normalizeStashShortcut(value: unknown): KeyId | undefined {
 	if (key === "pagedown") key = "pageDown";
 	const normalized = [...MODIFIERS.filter((part) => parts.includes(part)), key].join("+");
 	// All keys and modifiers have been validated against Pi's KeyId syntax above.
-	return normalized as KeyId;
+	return normalized as ShortcutId;
 }
 
-export function stashShortcutConflict(shortcut: KeyId, keybindings: Pick<KeybindingsManager, "getEffectiveConfig">): string | undefined {
+export function stashShortcutConflict(shortcut: ShortcutId, keybindings: Pick<KeybindingsManager, "getEffectiveConfig">): string | undefined {
 	for (const [action, keys] of Object.entries(keybindings.getEffectiveConfig())) {
 		if (!action.startsWith("tui.editor.") && !action.startsWith("tui.input.") && !GLOBAL_APP_ACTIONS.has(action)) {
 			continue;

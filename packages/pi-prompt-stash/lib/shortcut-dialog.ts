@@ -1,6 +1,7 @@
 import { keyHint, type KeybindingsManager, type Theme } from "@earendil-works/pi-coding-agent";
 import { type Component, type Focusable, Input, type KeyId, wrapTextWithAnsi } from "@earendil-works/pi-tui";
 import { renderDialog } from "./dialog.ts";
+import { piKit } from "./pi-kit.ts";
 import { normalizeStashShortcut, stashShortcutConflict } from "./shortcut.ts";
 
 interface ShortcutDialogOptions {
@@ -38,7 +39,7 @@ export function createShortcutDialog(options: ShortcutDialogOptions): Component 
 				...input.render(contentWidth),
 				...(statusHeight ? ["", ...status.slice(0, statusHeight)] : []),
 			];
-			return renderDialog({ theme, width, title: "Stash shortcut", body, footer });
+			return renderDialog({ kit: piKit, theme, width, title: "Stash shortcut", body, footer });
 		},
 		invalidate() { input.invalidate(); },
 		handleInput(data) {

@@ -20,6 +20,10 @@ pi install npm:@utpalsinghdev/pi-prompt-stash
 
 If you already have a personal prompt-stash extension, disable that copy first. Both register `/stash` and the stash shortcut.
 
+### Oh My Pi (omp)
+
+omp 19.2 and newer loads `extensions/omp.ts`, declared under `omp.extensions` in `package.json`. It shares all stash logic with the Pi entry and draws the picker with omp's own TUI library. `/stash shortcut` asks for the shortcut name in omp's input dialog instead of an inline popup.
+
 ## Try from source
 
 From the repository root, use Node.js 22.19 or newer:

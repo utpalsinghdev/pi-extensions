@@ -1,8 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import type { KeyId } from "@earendil-works/pi-tui";
-import { DEFAULT_STASH_SHORTCUT, normalizeStashShortcut } from "./shortcut.ts";
+import { DEFAULT_STASH_SHORTCUT, normalizeStashShortcut, type ShortcutId } from "./shortcut.ts";
 
 export interface StashEntry {
 	id: number;
@@ -13,7 +12,7 @@ export interface StashEntry {
 export interface StashState {
 	stashes: StashEntry[];
 	nextId: number;
-	shortcut: KeyId;
+	shortcut: ShortcutId;
 }
 
 function emptyState(): StashState {
