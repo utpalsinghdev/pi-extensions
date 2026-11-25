@@ -7,8 +7,10 @@ import {
 import type { ShortcutId } from "./shortcut.ts";
 import { loadState, saveState, type StashEntry, type StashState } from "./store.ts";
 
-// The two dialogs are the only host-specific parts: Pi and omp draw custom views with different TUI libraries.
+// The dialogs and shortcut rebinding are the only host-specific parts: Pi and omp draw custom views with different
+// TUI libraries, and Pi's /reload rebinds shortcuts while omp binds them once at startup.
 export interface StashUi {
+	reloadAppliesShortcut: boolean;
 	pickStash(ctx: ExtensionContext, options: {
 		stashes: StashEntry[];
 		onDelete: (id: number) => boolean;
@@ -89,6 +91,10 @@ export function promptStashExtension(pi: ExtensionAPI, ui: StashUi) {
 				const shortcut = await ui.askShortcut(ctx, { pi, initialValue: activeShortcut });
 				if (!shortcut || shortcut === activeShortcut) return;
 				if (!persist({ ...state, shortcut }, ctx)) return;
+				if (!ui.reloadAppliesShortcut) {
+					ctx.ui.notify(`Saved stash shortcut: ${shortcut}. Restart to apply.`, "info");
+					return;
+				}
 				ctx.ui.notify(`Saved stash shortcut: ${shortcut}. Reloading to apply.`, "info");
 				await ctx.reload();
 				return;

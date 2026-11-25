@@ -5,6 +5,7 @@ import type { StashUi } from "./extension.ts";
 import type { KeyId } from "@earendil-works/pi-tui";
 
 export const piUi: StashUi = {
+	reloadAppliesShortcut: true,
 	pickStash: (ctx, { stashes, onDelete }) => ctx.ui.custom<number | undefined>((tui, theme, _kb, done) => createStashPicker({
 		stashes,
 		kit: piKit,

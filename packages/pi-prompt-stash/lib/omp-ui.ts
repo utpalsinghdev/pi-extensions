@@ -14,6 +14,7 @@ type OmpShortcutConflict = { kind: "reserved" } | { kind: "keybinding"; keybindi
 type OmpApi = ExtensionAPI & { getShortcutConflict?: (shortcut: ShortcutId) => OmpShortcutConflict | undefined };
 
 export const ompUi: StashUi = {
+	reloadAppliesShortcut: false,
 	pickStash: (ctx, { stashes, onDelete }) => ctx.ui.custom<number | undefined>((host, theme, _kb, done) => {
 		const ui = host as unknown as OmpUiHost;
 		return createStashPicker({

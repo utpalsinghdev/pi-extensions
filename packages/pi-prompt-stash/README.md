@@ -22,7 +22,7 @@ If you already have a personal prompt-stash extension, disable that copy first. 
 
 ### Oh My Pi (omp)
 
-omp 19.2 and newer loads `extensions/omp.ts`, declared under `omp.extensions` in `package.json`. It shares all stash logic with the Pi entry and draws the picker with omp's own TUI library. `/stash shortcut` asks for the shortcut name in omp's input dialog instead of an inline popup.
+omp 19.2 and newer loads `extensions/omp.ts`, declared under `omp.extensions` in `package.json`. It shares all stash logic with the Pi entry and draws the picker with omp's own TUI library. `/stash shortcut` asks for the shortcut name in omp's input dialog instead of an inline popup. omp binds extension shortcuts once at startup, so a new shortcut applies after you restart omp instead of after a reload.
 
 ## Try from source
 
